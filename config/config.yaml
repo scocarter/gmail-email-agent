@@ -1,0 +1,121 @@
+# Gmail Email Agent Configuration
+
+# Gmail API Configuration
+gmail:
+  credentials_file: "config/credentials.json"
+  token_file: "config/token.json"
+  scopes:
+    - "https://www.googleapis.com/auth/gmail.readonly"
+    - "https://www.googleapis.com/auth/gmail.modify"
+    - "https://www.googleapis.com/auth/gmail.labels"
+  
+  # Email processing settings
+  processing:
+    batch_size: 50
+    max_concurrent_requests: 10
+    check_interval: 60  # seconds
+    max_emails_per_run: 500
+
+# AI Classification Settings
+ai:
+  provider: "openai"  # or "local" for local models
+  model: "gpt-4-turbo-preview"
+  max_tokens: 1000
+  temperature: 0.1
+  
+  # Local model settings (if using local AI)
+  local_model:
+    model_name: "microsoft/DialoGPT-medium"
+    cache_dir: "data/models"
+  
+  # Classification confidence thresholds
+  confidence_thresholds:
+    high: 0.85
+    medium: 0.70
+    low: 0.55
+
+# Email Classification Categories
+classification:
+  categories:
+    important:
+      description: "Emails requiring immediate attention or action"
+      keywords: ["urgent", "action required", "deadline", "meeting", "interview", "invoice", "payment"]
+      senders: ["boss@company.com", "hr@company.com"]
+      
+    promotional:
+      description: "Marketing emails, newsletters, promotions"
+      keywords: ["sale", "discount", "offer", "newsletter", "unsubscribe", "promotional"]
+      label: "CATEGORY_PROMOTIONS"
+      
+    social:
+      description: "Social media notifications and updates"
+      keywords: ["facebook", "twitter", "linkedin", "instagram", "notification"]
+      label: "CATEGORY_SOCIAL"
+      
+    junk:
+      description: "Spam, suspicious, or unwanted emails"
+      keywords: ["viagra", "lottery", "winner", "claim", "suspicious"]
+      confidence_threshold: 0.80
+
+# System Notifications
+notifications:
+  enabled: true
+  important_emails:
+    popup: true
+    sound: true
+    persist: true
+  
+  junk_summary:
+    show_summary: true
+    max_items: 20
+    
+  system_tray:
+    enabled: true
+    show_stats: true
+
+# Processing Modes
+modes:
+  listener:
+    enabled: true
+    check_interval: 60
+    real_time: true
+    
+  batch_processor:
+    enabled: true
+    default_timeframe: "7d"  # 7 days
+    max_timeframe: "30d"     # 30 days
+    
+  junk_detector:
+    enabled: true
+    require_confirmation: true
+    batch_size: 100
+
+# Database Configuration
+database:
+  type: "sqlite"
+  path: "data/email_agent.db"
+  backup_interval: "24h"
+  
+# Logging Configuration
+logging:
+  level: "INFO"
+  file: "logs/email_agent.log"
+  max_size: "10MB"
+  backup_count: 5
+  console: true
+  
+# Security Settings
+security:
+  encrypt_tokens: true
+  token_refresh_threshold: 3600  # seconds
+  rate_limiting:
+    requests_per_minute: 250
+    burst_limit: 100
+
+# Feature Flags
+features:
+  auto_categorize: true
+  learn_from_user: true
+  backup_before_delete: true
+  undo_support: true
+  analytics: true
